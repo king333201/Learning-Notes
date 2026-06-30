@@ -1,0 +1,53 @@
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# OS files
+Desktop.ini
+
+# Build outputs
+*.o
+*.obj
+*.elf
+*.hex
+*.bin
+*.map
+*.lst
+build/
+dist/
+Debug/
+Release/
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+*.bak
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Node
+node_modules/
+
+# Keil MDK
+*.uvguix.*
+*.scvd
+*.dbgdt
+JLinkLog.txt
+JLinkSettings.ini
+
+# STM32CubeIDE
+.project
+.cproject
+.settings/
+Debug/
+Drivers/
+Middlewares/
