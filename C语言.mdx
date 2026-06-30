@@ -1,0 +1,124 @@
+一、指针
+    指针大小：32 位平台为 4 字节，64 位平台为 8 字节。
+    指针类型决定解引用时读取的字节数和指针运算步长。
+
+    const 修饰规则：const 在 * 左边，指向的内容只读；在 * 右边，指针本身只读。
+    在左边时指向的内容不可变，指针指向的地址可变   const int *p1 = &a; 
+    在右边是指向的地址不可变，指向的内容可变       int *const p2 = &a;
+
+    1.函数指针
+        函数在内存里也是一段代码，也有起始地址。所以可以用指针指向函数，这就是函数指针。
+        // 定义一个普通函数
+        int add(int x, int y) {
+            return x + y;
+        }
+
+        int main() {
+            // 声明一个函数指针
+            int (*p)(int, int);   // p 是指向函数的指针
+            
+            p = add;              // p 指向 add 函数
+            
+            int result = p(3, 5); // 通过指针调用函数
+            printf("%d\n", result);  // 输出 8
+            
+            return 0;
+        }
+        拆解声明语句
+        int (*p)(int, int);
+        部分	        含义
+        int	        函数返回类型
+        (*p)	    p 是一个指针
+        (int, int)	指向的函数有两个 int 参数
+        
+        加括号是因为 () 优先级比 * 高，不加括号意思就变了。
+
+        函数指针有什么用？
+        场景 1：回调函数
+        // 加减乘除四个函数
+        int add(int a, int b) { return a + b; }
+        int sub(int a, int b) { return a - b; }
+        int mul(int a, int b) { return a * b; }
+        int div(int a, int b) { return a / b; }
+
+        // 计算函数，接受一个函数指针作为参数
+        int calculate(int x, int y, int (*op)(int, int)) {
+            return op(x, y);
+        }
+
+        int main() {
+            int a = 10, b = 5;
+            
+            printf("加: %d\n", calculate(a, b, add));  // 15
+            printf("减: %d\n", calculate(a, b, sub));  // 5
+            printf("乘: %d\n", calculate(a, b, mul));  // 50
+            printf("除: %d\n", calculate(a, b, div));  // 2
+            
+            return 0;
+        }
+        我把函数当作参数传进去，calculate 不需要写 if-else 判断，直接调用传进来的函数就行。
+
+        场景 2：函数指针数组（菜单选择）
+        void func1() { printf("功能1执行\n"); }
+        void func2() { printf("功能2执行\n"); }
+        void func3() { printf("功能3执行\n"); }
+
+        int main() {
+            // 函数指针数组
+            void (*menu[3])() = {func1, func2, func3};
+            
+            int choice;
+            printf("请输入功能编号(0~2): ");
+            scanf("%d", &choice);
+            
+            if (choice >= 0 && choice < 3) {
+                menu[choice]();  // 根据编号直接调用对应函数
+            }
+            
+            return 0;
+        }
+        用函数指针数组，一行代码替代了 switch-case，代码更简洁。
+    2.指针函数
+
+        这个更简单，就是"返回指针的函数"
+
+        int *func();  // func 是一个函数，返回值是 int*
+        先读括号：func() 说明是函数，前面的 int * 说明返回值是指针。
+
+        举例
+        // 返回两个数中较大值的地址
+        int *max_addr(int *a, int *b) {
+            if (*a > *b)
+                return a;    // 返回 a 的地址
+            else
+                return b;    // 返回 b 的地址
+        }
+
+        int main() {
+            int x = 10, y = 20;
+            
+            int *p = max_addr(&x, &y);
+            printf("较大值是: %d\n", *p);   // 20
+            
+            *p = 100;  // 通过返回的指针修改原变量的值
+            printf("y 现在变成了: %d\n", y);  // 100
+            
+            return 0;
+        }
+        另一个常见例子
+
+        // 字符串查找函数，返回找到的字符的地址
+        char *my_strchr(char *str, char ch) {
+            while (*str != '\0') {
+                if (*str == ch)
+                    return str;   // 返回找到位置的指针
+                str++;
+            }
+            return NULL;   // 没找到返回 NULL
+        }
+    3、一句话区分
+        名称	        本质	                        示例
+        函数指针	一个变量，存的是函数的地址	     int (*p)(int);
+        指针函数	一个函数，返回值是指针	        int *func();    
+
+   
